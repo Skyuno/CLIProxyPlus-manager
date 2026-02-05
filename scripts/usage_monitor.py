@@ -6,7 +6,7 @@ Monitors Kiro usage every minute, calculates consumption rate,
 and estimates time until credits are depleted.
 
 Usage:
-    python kiro_usage_monitor.py [--interval SECONDS]
+    python scripts/usage_monitor.py [--interval SECONDS]
 
 Configuration:
     Edit .env file or use environment variables:
@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any
 
 # Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from CLIProxyPlus_manager.panel import PanelClient, PanelConfig
 from CLIProxyPlus_manager.kiro import KiroAPI, UsageFormatter
@@ -242,13 +242,13 @@ def main() -> None:
     print()
     
     # Initialize clients
-    config = PanelConfig.from_env(Path(__file__).parent / ".env")
+    config = PanelConfig.from_env(Path(__file__).parent.parent / ".env")
     panel = PanelClient(config)
     kiro_api = KiroAPI(timeout=config.timeout)
     formatter = UsageFormatter()
     
     monitor = KiroUsageMonitor(panel, kiro_api, formatter)
-    output_dir = Path(__file__).parent / "output"
+    output_dir = Path(__file__).parent.parent / "output"
     output_dir.mkdir(exist_ok=True)
     
     print(f"🌐 服务器: {config.base_url}")

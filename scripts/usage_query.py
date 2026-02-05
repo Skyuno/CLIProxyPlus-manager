@@ -6,7 +6,7 @@ A Python script to query usage/balance information for Kiro authentication files
 from CLIProxyAPIPlus management API.
 
 Usage:
-    python kiro_balance_query.py
+    python scripts/usage_query.py
 
 Configuration:
     Edit .env file or use environment variables:
@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 # Add src to path for imports
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from CLIProxyPlus_manager.panel import PanelClient, PanelConfig
 from CLIProxyPlus_manager.kiro import KiroAPI, UsageFormatter
@@ -32,7 +32,7 @@ def main() -> None:
     print("=" * 60)
     
     # Initialize clients
-    config = PanelConfig.from_env(Path(__file__).parent / ".env")
+    config = PanelConfig.from_env(Path(__file__).parent.parent / ".env")
     panel = PanelClient(config)
     kiro_api = KiroAPI(timeout=config.timeout)
     formatter = UsageFormatter()
@@ -119,7 +119,7 @@ def main() -> None:
     print()
     
     # Optional: Save full results to JSON
-    output_dir = Path(__file__).parent / "output"
+    output_dir = Path(__file__).parent.parent / "output"
     output_dir.mkdir(exist_ok=True)
     output_file = output_dir / "kiro_balance_results.json"
     with open(output_file, "w", encoding="utf-8") as f:

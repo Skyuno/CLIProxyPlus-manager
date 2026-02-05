@@ -6,8 +6,8 @@ Python 工具集，用于管理和监控 CLIProxyAPIPlus 服务的 Kiro 认证�
 
 | 脚本 | 功能 |
 |------|------|
-| `kiro_usage_query.py` | 一次性查询所有 Kiro 账户余额 |
-| `kiro_usage_monitor.py` | 实时监控用量，计算消耗速率和预计用完时间 |
+| `scripts/usage_query.py` | 一次性查询所有 Kiro 账户余额 |
+| `scripts/usage_monitor.py` | 实时监控用量，计算消耗速率和预计用完时间 |
 
 ## 快速开始
 
@@ -30,13 +30,13 @@ CLIPROXY_KEY=your_management_api_key
 
 ```bash
 # 查询余额
-python kiro_usage_query.py
+python scripts/usage_query.py
 
 # 实时监控（默认60秒刷新）
-python kiro_usage_monitor.py
+python scripts/usage_monitor.py
 
 # 自定义刷新间隔
-python kiro_usage_monitor.py -i 30
+python scripts/usage_monitor.py -i 30
 ```
 
 ## 监控输出示例
@@ -51,13 +51,14 @@ python kiro_usage_monitor.py -i 30
 
 ```
 CLIProxyPlus-manager/
-├── kiro_usage_query.py      # 余额查询脚本
-├── kiro_usage_monitor.py    # 实时监控脚本
-├── src/CLIProxyPlus_manager/
-│   ├── panel/               # CLIProxyPlus 管理面板 API
-│   └── kiro/                # Kiro API 和格式化工具
-├── output/                  # 查询结果和历史记录
-└── .env                     # 配置文件
+├── scripts/                     # CLI 脚本
+│   ├── usage_query.py           # 余额查询
+│   └── usage_monitor.py         # 实时监控
+├── src/CLIProxyPlus_manager/    # 核心库
+│   ├── panel/                   # CLIProxyPlus 管理面板 API
+│   └── kiro/                    # Kiro API 和格式化工具
+├── output/                      # 查询结果和历史记录
+└── .env                         # 配置文件
 ```
 
 ## License
