@@ -41,6 +41,7 @@ env/
 # Output files
 output/
 *.json
+!template/**/*.json
 !.env.example
 
 # Logs

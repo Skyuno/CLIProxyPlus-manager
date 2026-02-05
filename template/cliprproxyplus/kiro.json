@@ -1,0 +1,15 @@
+{
+  "access_token": "",
+  "refresh_token": "",
+  "expires_at": "",
+  "auth_method": "",
+  "client_id": "",
+  "client_secret": "",
+  "region": "",
+  "last_refresh": "",
+  "disabled": false,
+  "email": "",
+  "profile_arn": "",
+  "provider": "AWS",
+  "type": "kiro"
+}
