@@ -103,6 +103,15 @@ class KiroUsageMonitor:
             total_remaining=total_remaining,
             account_details=account_details,
         )
+        
+        # 检测账号数量是否变化，如果变化则重置历史
+        if self.history:
+            prev_account_count = len(self.history[-1].account_details)
+            curr_account_count = len(account_details)
+            if prev_account_count != curr_account_count:
+                print(f"⚠️ 账号数量变化 ({prev_account_count} -> {curr_account_count})，重置历史记录")
+                self.history.clear()
+        
         self.history.append(snapshot)
         return snapshot
     
@@ -198,12 +207,13 @@ def print_status(snapshot: UsageSnapshot, rate_info: dict[str, Any]) -> None:
     # Compact per-account details
     for acc in snapshot.account_details:
         email = acc.get("email", "Unknown")[:30]
-        remaining = acc.get("remaining", 0)
+        used = acc.get("used", 0)
+        limit = acc.get("limit", 0)
         percentage = acc.get("percentage", 0)
         bar_width = 15
         filled = int(bar_width * percentage / 100)
         bar = "█" * filled + "░" * (bar_width - filled)
-        print(f"  [{bar}] {percentage:5.1f}% | {remaining:7.2f} | {email}")
+        print(f"  [{bar}] {percentage:5.1f}% | {used:7.2f}/{limit:.0f} | {email}")
 
 
 def save_history(monitor: KiroUsageMonitor, output_dir: Path) -> None:
