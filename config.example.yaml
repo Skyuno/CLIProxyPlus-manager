@@ -1,0 +1,21 @@
+# CLIProxyPlus Manager Configuration
+# Copy this file to config.yaml and fill in your values
+
+# Global settings
+global:
+  # Request timeout in seconds (default: 30)
+  timeout: 30
+
+# Panel configurations - supports multiple panels
+# Each panel represents a CLIProxyPlus server instance
+panels:
+  - name: "Panel 1"
+    url: "http://127.0.0.1:8080"
+    key: "your-management-key-here"
+    # Optional: override global timeout for this panel
+    # timeout: 60
+
+  # Add more panels as needed:
+  # - name: "Panel 2"
+  #   url: "http://127.0.0.1:8081"
+  #   key: "another-management-key"
