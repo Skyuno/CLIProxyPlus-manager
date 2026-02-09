@@ -1,12 +1,12 @@
 # CLIProxyPlus Manager
 
-Python 工具集，用于管理和监控 CLIProxyAPIPlus 服务的 Kiro 认证文件和用量。
+Python 工具集，用于管理和监控 CLIProxyAPIPlus 服务的 Kiro 认证文件和用量。支持多面板并发查询。
 
 ## 功能
 
 | 脚本 | 功能 |
 |------|------|
-| `scripts/usage_query.py` | 一次性查询所有 Kiro 账户余额 |
+| `scripts/usage_query.py` | 异步并发查询所有 Kiro 账户余额，支持多面板 |
 | `scripts/usage_monitor.py` | 实时监控用量，计算消耗速率和预计用完时间 |
 | `scripts/kiro_format_converter.py` | Kiro JSON 格式互转（aiclient2api ↔ cliprproxyplus） |
 
@@ -18,26 +18,41 @@ Python 工具集，用于管理和监控 CLIProxyAPIPlus 服务的 Kiro 认证�
 uv sync
 ```
 
-### 2. 配置环境变量
+### 2. 配置
 
-复制 `.env.example` 到 `.env` 并填写：
+复制 `config.example.yaml` 到 `config.yaml` 并填写：
 
-```env
-CLIPROXY_URL=http://127.0.0.1:8080
-CLIPROXY_KEY=your_management_api_key
+```yaml
+global:
+  timeout: 30
+
+panels:
+  - name: "Panel 1"
+    url: "http://127.0.0.1:8080"
+    key: "your-management-key-here"
+
+  - name: "Panel 2"
+    url: "http://127.0.0.1:8081"
+    key: "another-management-key"
 ```
 
 ### 3. 运行
 
 ```bash
-# 查询余额
+# 查询余额（全部面板）
 python scripts/usage_query.py
+
+# 查询指定面板
+python scripts/usage_query.py --panel "Panel 1"
 
 # 实时监控（默认60秒刷新）
 python scripts/usage_monitor.py
 
 # 自定义刷新间隔
 python scripts/usage_monitor.py -i 30
+
+# 监控指定面板
+python scripts/usage_monitor.py --panel "Panel 1" --panel "Panel 2"
 
 # 格式转换（自动检测方向）
 python scripts/kiro_format_converter.py input.json -o output.json
@@ -74,15 +89,22 @@ python scripts/kiro_format_converter.py kiro.json --to aiclient
 ```
 CLIProxyPlus-manager/
 ├── scripts/                     # CLI 脚本
-│   ├── usage_query.py           # 余额查询
-│   ├── usage_monitor.py         # 实时监控
+│   ├── usage_query.py           # 余额查询（异步）
+│   ├── usage_monitor.py         # 实时监控（异步）
 │   └── kiro_format_converter.py # 格式转换
 ├── src/CLIProxyPlus_manager/    # 核心库
-│   ├── panel/                   # CLIProxyPlus 管理面板 API
-│   └── kiro/                    # Kiro API 和格式化工具
+│   ├── panel/                   # CLIProxyPlus 面板管理
+│   │   ├── config.py            # 多面板 YAML 配置（AppConfig）
+│   │   ├── client.py            # 同步面板 API 客户端
+│   │   └── async_client.py      # 异步面板 API 客户端
+│   ├── kiro/                    # Kiro API
+│   │   ├── api.py               # 同步 Kiro 用量查询
+│   │   ├── async_api.py         # 异步 Kiro 用量查询
+│   │   └── formatter.py         # 用量格式化和展示
+│   └── utils/                   # 通用工具
 ├── template/                    # JSON 格式模板
-├── output/                      # 查询结果和历史记录
-└── .env                         # 配置文件
+├── config.yaml                  # 配置文件（不纳入版本控制）
+└── config.example.yaml          # 配置示例
 ```
 
 ## License
