@@ -55,25 +55,29 @@ async def query_single_account(
         Account detail dict, or None if failed/disabled.
     """
     filename = file_info.get("name", "")
-    email = file_info.get("email", filename)
+    email = filename.replace(".json", "")
     status = file_info.get("status", "")
 
     if status == "disabled":
+        print(f"  ⏭️ {email}: disabled, 跳过")
         return None
 
     auth_data = await panel_client.download_auth_file(session, filename)
     if not auth_data:
+        print(f"  ❌ {email}: auth_data 下载失败")
         return None
 
     access_token = auth_data.get("access_token", "")
     if not access_token:
+        print(f"  ❌ {email}: access_token 为空")
         return None
 
-    region = auth_data.get("region", "us-east-1")
+    region = "us-east-1"
     usage = await kiro_api.query_usage(session, access_token, region=region)
     summary = formatter.format_summary(usage)
 
     if "error" in summary:
+        print(f"  ❌ {email}: usage查询失败 - {summary.get('error', 'unknown')}")
         return None
 
     return {
